@@ -52,6 +52,32 @@ class ListSuite extends FunSuite {
     assert(l2 == List(4,1,2,3))
   }
 
+  test("Se pueden concatenar listas"){
+    val l1 = List(1,2,3)
+    val l2 = List(4,5,6)
+
+    val l3 = l1 ::: l2
+    assert(l3 == List(1,2,3,4,5,6))
+  }
+
+  test("Adicionar un elemento con :+"){
+    val l1 = List(1,2,3)
+    val l2 = l1:+4
+
+    assert(l2 == List(1,2,3,4))
+  }
+
+  test("Adicionar un elemento con"){
+    val l1 = List(2,3,4)
+    val l2 = 1 :: (l1:+5)
+
+    assert(l2 == List(1,2,3,4,5))
+
+    val res = 1+:l1:+5
+    assert(res == List(1,2,3,4,5))
+
+  }
+
   test("A una lista se le debe poder eliminar elementos con drop") {
     val lista = List(1, 2, 3, 4)
     val dropped =lista.drop(2)
@@ -103,17 +129,43 @@ class ListSuite extends FunSuite {
         numero % 2 == 0
       )
 
-      lista.filter(_%2==0)
+      lista.filter(_%2==0)  // otra forma de hacerlo, pero no es recomendado
 
     }
   }
 
-  test("Una lista se debe poder acumular") {
+  test("Una lista se debe poder eliminar bajo una condicion") {
     val lista = List(1, 2, 3, 4)
-    assertResult(10) {
+    assertResult(List(2, 3, 4)) {
+      lista.dropWhile(numero =>  // borra mientras se cumpla
+        numero % 2 != 0
+      )
+    }
+
+    assertResult(List(1, 2, 3, 4)) {
+      lista.dropWhile(numero =>  // borra mientras se cumpla como uno no es par no borra ninguno, queda igual.
+        numero % 2 == 0
+      )
+    }
+  }
+
+  test("Una lista se debe poder acumular") {
+    val lista = List(1, 2, 3, 4, 5)
+    assertResult(15) {
       lista.fold(0) { (acumulado, item) =>
         acumulado + item
       }
+      lista.sum
+    }
+  }
+
+  test("Una lista se debe poder multiplicar") {
+    val lista = List(1, 2, 3, 4, 5)
+    assertResult(120) {
+      lista.fold(1) { (acumulado, item) =>
+        acumulado * item
+      }
+      lista.product
     }
   }
 
@@ -139,8 +191,6 @@ class ListSuite extends FunSuite {
     }
   }
 
-
-
   test("fold sobre una List de objetos"){
     case class MyCaseClass(i:Int, var s:String)
     val lista: List[MyCaseClass] = List( MyCaseClass(1,"1"),  MyCaseClass(2, "2"))
@@ -152,7 +202,18 @@ class ListSuite extends FunSuite {
 
   test("test - obtenga el promedio de los numeros pares") {
     val lista = List(1, 2, 3, 4, 6, 7, 8, 9, 10)
-    assert(true)
+    assertResult(6) {
+      val par = lista.filter(numero =>
+        numero % 2 == 0
+      )
+      println(par)
+      val sum = par.fold(0) { (acumulado, item) =>
+        acumulado + item
+      }
+      sum / lista.filter(_%2==0).size
+    }
+
+    assert(6 == lista.filter(_%2==0).fold(0){(a,b)=> a+b} / lista.filter(_%2==0).size)
   }
 
   test("Una lista se debe poder dividir") {
@@ -183,6 +244,11 @@ class ListSuite extends FunSuite {
     assert(result == None)
   }
 
+  test("Se debe poder acceder al primer elemento de List() no vacia de forma segura") {
+    val lista = List(1,2,3,4)
+    val result = lista.headOption
+    assert(result == Some(1))
+  }
 
   test("Una List se debe poder transformar") {
 
@@ -204,6 +270,18 @@ class ListSuite extends FunSuite {
     val r = l.map(numero => MyCaseClass(numero))
 
     assert(r == List(MyCaseClass(1),MyCaseClass(2),MyCaseClass(3)))
+
+  }
+
+
+  test("Una list de string y se va transformar en la longuitud de cada string"){
+
+    def numCaracter(s:String):Int = s.length
+
+    val lista = List("santiago", "Camilo")
+    val lista2 = lista.map(dato => numCaracter(dato))
+
+    assert(lista2 == List(8,6))
 
   }
 
