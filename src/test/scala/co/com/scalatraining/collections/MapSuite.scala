@@ -6,12 +6,12 @@ import scala.collection.SortedMap
 
 class MapSuite extends FunSuite {
 
-  test ("Creacion vacia") {
-      val mapa1 = Map()
-      val mapa2 = Map.empty
-      assert(mapa1.isEmpty)
-      assert(mapa2.isEmpty)
-      assert(mapa1 == mapa2)
+  test("Creacion vacia") {
+    val mapa1 = Map()
+    val mapa2 = Map.empty
+    assert(mapa1.isEmpty)
+    assert(mapa2.isEmpty)
+    assert(mapa1 == mapa2)
   }
 
   test("foreach en un Map") {
@@ -23,15 +23,24 @@ class MapSuite extends FunSuite {
       )
       sum
     }
+    // otra forma de hacerlo
+    assertResult(6) {
+      var sum1 = 0
+      map.foreach {
+        case (x, v) =>
+          sum1 += v
+      }
+      sum1
+    }
   }
 
-  test("Un Map se debe poder operar en un for-comp"){
-    val mapa = Map(1->"uno", 2->"dos")
+  test("Un Map se debe poder operar en un for-comp") {
+    val mapa = Map(1 -> "uno", 2 -> "dos")
 
-    val res = for{
+    val res = for {
       i <- mapa
       if i._1 == 1
-    } yield(i)
+    } yield (i)
 
 
     assert(res.keys.size === 1)
@@ -55,11 +64,10 @@ class MapSuite extends FunSuite {
     }
   }
 
-
   test("head en un Map vacio") {
     val map = Map.empty
 
-    assertThrows[NoSuchElementException]{
+    assertThrows[NoSuchElementException] {
       val x = map.head
     }
   }
@@ -89,9 +97,7 @@ class MapSuite extends FunSuite {
 
 
   test("drop en un Map") {
-
-
-   val map = Map("1" -> 1, "2" -> 2, "3" -> 3)
+    val map = Map("1" -> 1, "2" -> 2, "3" -> 3)
     assertResult(Map("2" -> 2, "3" -> 3)) {
       map.drop(1)
     }
@@ -117,10 +123,10 @@ class MapSuite extends FunSuite {
     }
   }
 
-  test("Transformacion de un Map con map"){
-    val m = Map("1"->1,"2"->2,"3"->3)
-    val res = m.map(kv => (kv._1+" the key", kv._2))
-    assert(res("1 the key")==1)
+  test("Transformacion de un Map con map") {
+    val m = Map("1" -> 1, "2" -> 2, "3" -> 3)
+    val res = m.map(kv => (kv._1 + " the key", kv._2))
+    assert(res("1 the key") == 1)
   }
 
   test("mapValues en un Map") {
@@ -128,6 +134,21 @@ class MapSuite extends FunSuite {
     assertResult(Map("1" -> 1, "2" -> 4, "3" -> 9)) {
       map.mapValues(valor => valor * valor)
     }
+  }
+
+  // string con texto que retorna en un mapa con la clave de la palabra y el valor es el numero que aparece en el texto
+  test("Texto sacar el numero de veces que aparece una palabra") {
+
+    def contarPalabras(text: String): Map[String, Int] =
+      text.split(" ").map(_.toLowerCase).groupBy(identity).mapValues(_.size)
+    val texto = "Hola a todos hola"
+    val res = contarPalabras(texto)
+    println(res)
+
+    assert(res === Map("hola" -> 2, "a" -> 1, "todos" -> 1))
+
+    //val res2 = texto.split(" ").foldLeft(Map[String, Int]())(op = (i, m) => m  (i -> (m.getOrElse(i, 0)1)))
+    //println(res2)
   }
 
 }

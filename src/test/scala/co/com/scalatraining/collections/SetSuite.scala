@@ -145,11 +145,49 @@ class SetSuite extends FunSuite {
 
   test("BitSet"){
     val s = BitSet.empty
-    val r = s + 1 + 2 + 3 + 0
+    val r = s + 1 + 2 + 3 + 0 + 4
+    println(r)
     assert(r.head == 0)
     assert(r.tail.head == 1)
     assert(r.tail.tail.head == 2)
     assert(r.tail.tail.tail.head == 3)
+    assert(r.tail.tail.tail.tail.head == 4)
   }
+
+  //dado dos conjuntos, union, intercepción, complemento, diferencia
+
+  test("connjuntos, unión, intercepción, complemento, diferencia"){
+    val set1 = Set(1,2,3,6)
+    val set2 = Set(4,5,6)
+
+    //unión
+    val union = set1.union(set2)
+
+    // intercepción
+    val comple = set1.&~(set2)
+
+    // complemento
+    val inter = set1.diff(set2)
+
+    // complemento
+    val comple2 = set2.&~(set1)
+
+    // complemento
+    //val comple2 = set1.(set2)
+
+    println(comple2)
+
+    /*def union2(set3: Set[Int], set4: Set[Int]) =
+      set4.foreach((x) =>
+        set3 + x
+      )*/
+
+    println("aca")
+
+    val res2 = set1.foldLeft(set2) ((resultado, item) => resultado + item)
+
+    println(res2)
+
+    }
 
 }

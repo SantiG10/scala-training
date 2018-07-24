@@ -276,9 +276,21 @@ class ListSuite extends FunSuite {
 
     def numCaracter(s:String):Int = s.length
 
-    val lista = List("santiago", "Camilo")
+    val lista = List("Santiago", "Camilo")
     val lista2 = lista.map(dato => numCaracter(dato))
 
     assert(lista2 == List(8,6))
+  }
+
+  //una lista de lista, crear el promedio de las listas
+  test("flatmap de lista, sacar el promedio"){
+    val lista = List(List(1,2), List(2,2), Nil)
+
+    val lista2 = lista.filter(!_.isEmpty).flatMap(x => List(x.sum/x.size))
+
+    val lista3 = lista.filter(!_.isEmpty).map(x => x.sum/x.size)
+
+    assert(lista2 == List(1,2))
+    assert(lista3 == List(1,2))
   }
 }
