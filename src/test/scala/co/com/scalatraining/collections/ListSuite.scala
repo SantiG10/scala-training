@@ -213,6 +213,7 @@ class ListSuite extends FunSuite {
       sum / lista.filter(_%2==0).size
     }
 
+    // otra forma de hacerlo
     assert(6 == lista.filter(_%2==0).fold(0){(a,b)=> a+b} / lista.filter(_%2==0).size)
   }
 
@@ -251,7 +252,6 @@ class ListSuite extends FunSuite {
   }
 
   test("Una List se debe poder transformar") {
-
     def f(s:String):String = s+"prueba"
 
     val lista = List("1", "2", "3")
@@ -270,11 +270,9 @@ class ListSuite extends FunSuite {
     val r = l.map(numero => MyCaseClass(numero))
 
     assert(r == List(MyCaseClass(1),MyCaseClass(2),MyCaseClass(3)))
-
   }
 
-
-  test("Una list de string y se va transformar en la longuitud de cada string"){
+  test("Una list de string que se transforma en otra list con la longuitud de cada string"){
 
     def numCaracter(s:String):Int = s.length
 
@@ -282,8 +280,5 @@ class ListSuite extends FunSuite {
     val lista2 = lista.map(dato => numCaracter(dato))
 
     assert(lista2 == List(8,6))
-
   }
-
-
 }
