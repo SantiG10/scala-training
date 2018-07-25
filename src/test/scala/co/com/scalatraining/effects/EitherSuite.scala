@@ -20,7 +20,6 @@ class EitherSuite extends FunSuite{
   }
 
   test("Either left or right"){
-
     assert(foo(2).isRight)
   }
 
@@ -34,18 +33,15 @@ class EitherSuite extends FunSuite{
         6
       }
   )
-
     assert(r == 6)
-
   }
-
 
   test("Un Either se debe poder fold por la izquierda"){
     val r: Int  = foo(7).fold[Int]( s => {
       assert(true)
       1
-    }
-      , i => {
+      }
+    , i => {
         assert(false)
         6
       }

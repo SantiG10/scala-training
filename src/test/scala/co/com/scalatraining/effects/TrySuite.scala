@@ -4,7 +4,7 @@ import java.io.Serializable
 
 import org.scalatest._
 
-import scala.util.{Failure, Success, Try}
+import scala.util.{Failure, Success, Try, control}
 
 class TrySuite extends FunSuite with Matchers {
 
@@ -18,8 +18,8 @@ class TrySuite extends FunSuite with Matchers {
     1
   }
 
-  def f = Try{estallar}
-  def s = Try{computar}
+  def f = Try{estallar} // fail
+  def s = Try{computar} //success
 
   test("Tratando el Try como un bloque try-catch"){
     val res = Try{
@@ -35,13 +35,19 @@ class TrySuite extends FunSuite with Matchers {
   test("Se debe poder hacer pattern match sobre un Try que es Failure"){
     f match {
       case Success(valor) => assert(false)
-      case Failure(e) => assert(true)
+      case Failure(e) => {
+        println(s"La excepcion generada en pattern match es: ${e.getMessage}")
+        assert(true)
+      }
     }
   }
 
   test("Se debe poder hacer pattern match sobre un Try que es Success"){
     s match {
-      case Success(valor) => assert(true)
+      case Success(valor) => {
+        assert(valor == 1)
+        assert(true)
+      }
       case Failure(e) => assert(false)
     }
   }
@@ -55,6 +61,9 @@ class TrySuite extends FunSuite with Matchers {
     val res = s.map(x=>"HOLA")
     assert(res.isSuccess)
 
+    assert(s == Success(1))
+    assert(res == Success("HOLA"))
+
     for{
       ss <- res
     }yield{
@@ -63,8 +72,6 @@ class TrySuite extends FunSuite with Matchers {
 
     assert(res == Try("HOLA"))
     assert(res == Success("HOLA"))
-
-
   }
 
   test("Un Success se debe poder map [assert con flatmap]"){
@@ -87,6 +94,30 @@ class TrySuite extends FunSuite with Matchers {
 
   }
 
+  test("Error en la recuperacion con recover Success(Exception)"){
+    val rec = f.recover{
+      case e:Exception => throw new Exception("Error propio")
+    }
+
+    assert(rec.isFailure)
+
+    rec match {
+      case Failure(e) => assert(e.getMessage == "Error propio")
+    }
+  }
+
+  /*test("Error en la recuperacion con recover Success(Failure)"){
+    val rec = f.recover{
+      case e:Exception => Try(new Exception("Error propio"))
+    }
+
+    assertResult(rec.isSuccess)
+
+    rec match {
+      case Success(v:Try[String]) => assert(v.isFailure)
+    }
+  }*/
+
   test("Un Failure se debe poder recuperar con recoverWith"){
 
     val res = f.map(x=>"HOLA")
@@ -95,6 +126,7 @@ class TrySuite extends FunSuite with Matchers {
     }}
 
     res.flatMap(x => Try(assert(x == 1)) )
+    assert(res == Success(1))
 
   }
 
@@ -141,7 +173,6 @@ class TrySuite extends FunSuite with Matchers {
   y como ante una falla en la cadena, el computo resultante es una falla
    */
   test("Try for-com. A chain of Tries with a Failure is a Failure"){
-
     val res = for{
       x <- s
       y <- f
@@ -149,9 +180,31 @@ class TrySuite extends FunSuite with Matchers {
     } yield x + y + z
 
     assert(res.isFailure)
-
   }
 
+  test("Try for-com. A chain of Tries with a Failure is a Failure recuperado"){
+    val res = for{
+      x <- s
+      y <- f.recoverWith{case e: Exception => Success(6)}
+      z <- s
+    } yield x + y + z
+
+    assert(res == Success(8))
+  }
+
+  test("Try for-com. A chain of Tries with a Failure is a Failure recuperado al final"){
+    val res = for{
+      x <- s
+      y <- f
+      z <- s
+    } yield x + y + z
+
+    val res1 = res.recoverWith {
+      case e: Exception => Success(10)
+    }
+
+    assert(res1 == Success(10))
+  }
 
   /*
   Monad laws
