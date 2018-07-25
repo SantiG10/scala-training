@@ -13,11 +13,11 @@ object Classes {
     val r2 = r1.map(x => CrearCotizacion(p, x.periodo, x.aportante, x.dias, x.ibc, 30*x.ibc/x.dias))
     val r3 = r2.distinct
     val rAportante = r3.groupBy(x => x.aportante)
-    val r4 = rAportante.map(x => x._1 -> x._2.foldLeft(0){(ac, cot) =>
-      if(ac < cot.salario){
-        cot.salario
+    val r4 = rAportante.map(x => x._1 -> x._2.foldLeft(0){(acumulado, i) =>
+      if(acumulado < i.salario){
+        i.salario
       }  else {
-        ac
+        acumulado
       }
     })
     r4.foldLeft(0){(ac, item) => ac + item._2}
@@ -42,6 +42,8 @@ object Classes {
     //listaCotizaciones.foreach(println)
 
     val historialLimpio = limpiarHistorial(listaCotizaciones, p)
+
+    println("\nAporte: " + historialLimpio)
 
   }
 
