@@ -299,23 +299,17 @@ class OptionSuite extends FunSuite {
     assert(res1 == res2)
   }
 
-  /*test("Cuando un pattern match es igual que hacer foreach"){
+  test("Cuando un pattern match es igual que hacer foreach"){
     val valor = Some(1)
-    var cont = 0
-    //def foo(x:Int): Option[Int] = Some(x + 1)
-
-    var res1 = valor match {
-      case None => {}
-      case Some(x) => foo(x)
+    def foo(x:Int): Int = {
+      1
     }
+    
+    var i: Int = 0
+    valor.foreach(x => i += 1)
 
-    for (i <- 1 to 3){
-      cont += 1
-    }
-    var res2 = valor.foreach()
-
-    assert(res1 == res2)
-  }*/
+    assert(1 == i)
+  }
 
   test("Cuando un pattern match es igual que hacer isDefined"){
     val valor: Option[Int] = Some(1)
