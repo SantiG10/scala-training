@@ -154,28 +154,25 @@ class SetSuite extends FunSuite {
     assert(r.tail.tail.tail.tail.head == 4)
   }
 
-  //dado dos conjuntos, union, intercepción, complemento, diferencia
+  //dado dos conjuntos => union, intercepción, diferencia
 
   test("connjuntos, unión, intercepción, complemento, diferencia"){
-    val set1 = Set(1,2,3,6)
-    val set2 = Set(4,5,6)
+    val set1 = Set(1,2,3,6,8)
+    val set2 = Set(4,5,6,8)
 
     //unión
     val union = set1.union(set2)
 
-    // intercepción
+    // diferencia 1 -> 2
     val comple = set1.&~(set2)
 
-    // complemento
-    val inter = set1.diff(set2)
-
-    // complemento
+    // diferencia 2 -> 1
     val comple2 = set2.&~(set1)
 
-    // complemento
-    //val comple2 = set1.(set2)
+    // intercepción
+    val inter = set1.intersect(set2)
 
-    println(comple2)
+    println("inter: " + inter)
 
     /*def union2(set3: Set[Int], set4: Set[Int]) =
       set4.foreach((x) =>
@@ -184,9 +181,23 @@ class SetSuite extends FunSuite {
 
     println("aca")
 
+    //unión
     val res2 = set1.foldLeft(set2) ((resultado, item) => resultado + item)
+    assert(union === res2)
 
-    println(res2)
+    //intercepción
+    val res3 = set1.filter( x => set2(x))
+    assert(inter === res3)
+
+    //diferencia 1 -> 2
+    val res4 = set1.filterNot(x => set2.contains(x))
+    assert(comple === res4)
+
+    //diferencia 2 -> 1
+    val res5 = set2.filterNot(x => set1.contains(x))
+    assert(comple2 === res5)
+
+    println("inter2: " + res4)
 
     }
 
