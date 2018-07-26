@@ -301,10 +301,7 @@ class OptionSuite extends FunSuite {
 
   test("Cuando un pattern match es igual que hacer foreach"){
     val valor = Some(1)
-    def foo(x:Int): Int = {
-      1
-    }
-    
+
     var i: Int = 0
     valor.foreach(x => i += 1)
 

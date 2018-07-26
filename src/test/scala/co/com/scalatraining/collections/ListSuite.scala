@@ -284,7 +284,7 @@ class ListSuite extends FunSuite {
 
   //una lista de lista, crear el promedio de las listas
   test("flatmap de lista, sacar el promedio"){
-    val lista = List(List(1,2), List(2,2), Nil)
+    val lista: Seq[List[Int]] = List(List(1,2), List(2,2), Nil)
 
     val lista2 = lista.filter(!_.isEmpty).flatMap(x => List(x.sum/x.size))
 
