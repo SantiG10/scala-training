@@ -252,6 +252,8 @@ class OptionSuite extends FunSuite {
     assert(resultado == None)
   }
 
+  // --------------------- Option Cheat Sheet ------------------------------
+
   test("Cuando un pattern match es igual que hacer flatMap"){
     val nombre: Option[String] = Some("Santiago")
     var res1: Option[String] = Some("")
@@ -300,7 +302,7 @@ class OptionSuite extends FunSuite {
   }
 
   test("Cuando un pattern match es igual que hacer foreach"){
-    val valor = Some(1)
+    val valor = Some(5)
 
     var i: Int = 0
     valor.foreach(x => i += 1)
@@ -334,7 +336,7 @@ class OptionSuite extends FunSuite {
     assert(res1 == res2)
   }
 
-  /*test("Cuando un pattern match es igual que hacer forall"){
+  test("Cuando un pattern match es igual que hacer forall"){
     val valor: Option[Int] = Some(2)
 
     def foo(x:Option[Int]): Boolean = x.forall(x => x < 5)
@@ -344,10 +346,67 @@ class OptionSuite extends FunSuite {
       case Some(x) => foo(Some(x))
     }
 
-    //val res2 = valor.forall(foo(Some(_)))
+    val res2 = valor.forall(x => x < 5)
 
     assert(res1 == res2)
-  }*/
+  }
 
+  test("Cuando un pattern match es igual que hacer exist"){
+    val valor: Option[Int] = Some(2)
+
+    def foo(x:Option[Int]): Boolean = x.exists(x => x < 5)
+
+    val res1 = valor match {
+      case None => false
+      case Some(x) => foo(Some(x))
+    }
+
+    val res2 = valor.exists(x => x < 5)
+
+    assert(res1 == res2)
+  }
+
+  test("Cuando un pattern match es igual que hacer OrElse"){
+    val valor: Option[Int] = Some(2)
+
+    def foo(): Option[Int] = None
+
+    val res1 = valor match {
+      case None => foo
+      case Some(x) => Some(x)
+    }
+
+    val res2 = valor.orElse(foo)
+
+    assert(res1 == res2)
+  }
+
+  test("Cuando un pattern match es igual que hacer getOrElse"){
+    val valor: Option[Int] = Some(2)
+
+    def foo(): Option[Int] = None
+
+    val res1 = valor match {
+      case None => foo
+      case Some(x) => x
+    }
+
+    val res2 = valor.getOrElse(foo)
+
+    assert(res1 == res2)
+  }
+
+  test("Cuando un pattern match es igual que hacer toList"){
+    val valor: Option[Int] = Some(2)
+
+    val res1 = valor match {
+      case None => Nil
+      case Some(x) => x :: Nil
+    }
+
+    val res2 = valor.toList
+
+    assert(res1 == res2)
+  }
 }
 
