@@ -110,4 +110,18 @@ class QueueSuite extends FunSuite{
       )
     }
   }
+
+  test("Obtener los ultimos de un Queue"){
+    val cola = Queue(1,2,3,4,5,6,7,8)
+    assertResult(Queue(7,8)){
+      cola.takeRight(2)
+    }
+  }
+
+  test("Obtener los primeros de un Queue"){
+    val cola = Queue(1,2,3,4,5,6,7,8)
+    assertResult(Queue(1,2)){
+      cola.take(2)
+    }
+  }
 }
