@@ -40,6 +40,8 @@ class ModelingSuite extends FunSuite {
     val instruccionI = Try(newInstruccion('I'))
     val instruccionInvalida = Try(newInstruccion('.'))
 
+    println(instruccionA)
+
     assert(instruccionA == Success(A()))
     assert(instruccionD == Success(D()))
     assert(instruccionI == Success(I()))
@@ -52,12 +54,16 @@ class ModelingSuite extends FunSuite {
   trait Color
   case class Rojo() extends Color
   case class Azul() extends Color
+  case class Verde() extends Color
+  case class Negro() extends Color
 
   trait Marca
   case class Mazda() extends Marca
   case class Chevrolet() extends Marca
+  case class Bajaj() extends Marca
+  case class Ducati() extends Marca
 
-  trait Vehiculo{
+  trait Vehiculo {
     val color: Color
     val marca: Marca
   }
@@ -66,15 +72,19 @@ class ModelingSuite extends FunSuite {
   case class Moto(color:Color, marca: Marca) extends Vehiculo
 
   val crojo = Carro(Rojo(), Mazda())
-  val cazul = Carro(Azul(), Chevrolet())
+  val mverde = Moto(Verde(), Ducati())
 
   sealed trait servicioTallerAlgebra{
-    def pintar(c:Carro, color:Color): Carro
+    def pintarCarro(c:Carro, color:Color): Carro
+    def pintarMoto(m:Moto, color: Color): Moto
   }
 
   sealed trait servicioTallerInterprete extends servicioTallerAlgebra{
-    def pintar(carro: Carro, color: Color): Carro = {
+    def pintarCarro(carro: Carro, color: Color): Carro = {
       Carro(color,carro.marca)
+    }
+    def pintarMoto(moto: Moto, color: Color): Moto = {
+      Moto(moto.color,moto.marca)
     }
   }
 
@@ -115,19 +125,24 @@ class ModelingSuite extends FunSuite {
       }
     }
 
-    val c = new miCliente;
+    val c = new miCliente
     val res = c.operarPropioDeCliente(1)
 
     assert(res == 3)
 
   }
 
-  test("Usar un servicio adecuadamente"){
+  test("Usar un servicio adecuadamente Operar A"){
     import interpreteDeAlgebra._
     val res = operarA(1) + 1
     assert(res == 3)
   }
 
+  test("Usar un servicio adecuadamente Operar B"){
+    import interpreteDeAlgebra._
+    val res = operarB(1) + 1
+    assert(res == 4)
+  }
 
   test("Seamos presumidos"){
 
@@ -145,9 +160,11 @@ class ModelingSuite extends FunSuite {
 
   test("Pintar mi carro"){
     import servicioTallerInterprete._
-    val res = pintar(Carro(Azul(),Mazda()), Rojo())
-    assert(res.color == Rojo())
+    val carro = pintarCarro(Carro(Azul(),Mazda()), Rojo())
+    val moto  = pintarMoto(Moto(Negro(), Bajaj()), Verde())
+    println(s"Carro color: ${carro.color}")
+    println(s"Moto color: ${moto.color}")
+    assert(carro.color == Rojo())
+    assert(moto.color == Negro())
   }
-
-
 }
