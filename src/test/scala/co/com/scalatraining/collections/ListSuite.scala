@@ -293,4 +293,11 @@ class ListSuite extends FunSuite {
     assert(lista2 == List(1,2))
     assert(lista3 == List(1,2))
   }
+
+  test("prueba de scanLeft"){
+    val numbers = List(1,2,3,4,5)
+    val resul = numbers.scanLeft(0)((a, b) => a + b)
+    println(s"ScanLeft: $resul")
+    assert(List(0, 1, 3, 6, 10, 15) === resul)
+  }
 }
